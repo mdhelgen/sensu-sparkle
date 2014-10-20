@@ -1,1 +1,2 @@
 Gemfile.lock
+.chef/knife.local.rb
