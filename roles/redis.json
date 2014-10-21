@@ -1,0 +1,7 @@
+{
+    "name": "redis",
+    "description": "Redis node for Sensu",
+    "run_list": [
+        "recipe[hw-sensu::redis]"
+    ]
+}

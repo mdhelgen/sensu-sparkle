@@ -3,15 +3,22 @@ SparkleFormation.dynamic(:launch_config) do |_name, _config = {}|
   resources("#{_name}_security_group".to_sym) do
     type 'AWS::EC2::SecurityGroup'
     properties do
-      group_description 'Enable SSH'
-      security_group_ingress _array(
-        -> {
-          ip_protocol 'tcp'
-          from_port 22
-          to_port 22
-          cidr_ip '0.0.0.0/0'
-        }
-      )
+      group_description "#{_name} public TCP ports"
+    end
+  end
+
+  public_ports = [_config[:public_ports]].flatten.compact + [22]
+
+  public_ports.each do |port|
+    resources("#{_name}_security_group_#{port}".to_sym) do
+      type 'AWS::EC2::SecurityGroupIngress'
+      properties do
+        group_name ref!("#{_name}_security_group".to_sym)
+        ip_protocol 'tcp'
+        from_port port
+        to_port port
+        cidr_ip '0.0.0.0/0'
+      end
     end
   end
 

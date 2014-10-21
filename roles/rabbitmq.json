@@ -1,0 +1,7 @@
+{
+    "name": "rabbitmq",
+    "description": "RabbitMQ node for Sensu",
+    "run_list": [
+        "recipe[hw-sensu::rabbitmq]"
+    ]
+}
