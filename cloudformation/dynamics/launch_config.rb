@@ -17,18 +17,17 @@ SparkleFormation.dynamic(:launch_config) do |_name, _config = {}|
 
   resources("#{_name}_launch_wait_handle".to_sym) do
     type 'AWS::CloudFormation::WaitConditionHandle'
-    if _config[:depends_on]
-      depends_on _config[:depends_on]
-    end
   end
+
+  additional_security_groups = [_config[:security_groups]].flatten.compact
 
   resources("#{_name}_launch_config".to_sym) do
     type 'AWS::AutoScaling::LaunchConfiguration'
     properties do
-      image_id 'ami-a94e0c99'
-      instance_type 'c3.large'
+      image_id (_config[:image_id] || 'ami-a94e0c99')
+      instance_type (_config[:instance_type] || 'c3.large')
       key_name 'sensu-sparkle'
-      security_groups [_cf_ref("#{_name}_security_group".to_sym), _config[:stack_security_group]]
+      security_groups [_cf_ref("#{_name}_security_group".to_sym)] + additional_security_groups
       user_data(
         _cf_base64(
           _cf_join(

@@ -2,6 +2,7 @@ SparkleFormation.new(:sensu).load(:base).overrides do
 
   description 'Super cool Sensu deployment'
 
+  # Security groups
   resources(:sensu_internal_security_group) do
     type 'AWS::EC2::SecurityGroup'
     properties do
@@ -9,60 +10,64 @@ SparkleFormation.new(:sensu).load(:base).overrides do
     end
   end
 
-  dynamic!(:launch_config, 'rabbitmq', :stack_security_group => ref!(:sensu_internal_security_group))
-
-  parameters.rabbitmq_nodes do
-    type 'Number'
-    description 'Number of RabbitMQ nodes for ASG.'
-    default '3'
-  end
-
-  resources.rabbitmq_autoscale do
-    type 'AWS::AutoScaling::AutoScalingGroup'
+  resources(:rabbitmq_public_security_group) do
+    type 'AWS::EC2::SecurityGroup'
     properties do
-      availability_zones({'Fn::GetAZs' => ''})
-      launch_configuration_name ref!(:rabbitmq_launch_config)
-      min_size ref!(:rabbitmq_nodes)
-      max_size ref!(:rabbitmq_nodes)
+      group_description 'RabbitMQ public ports'
+      security_group_ingress _array(
+        -> {
+          ip_protocol "tcp"
+          from_port 5671
+          to_port 5671
+          cidr_ip "0.0.0.0/0"
+        }
+      )
     end
   end
 
-  dynamic!(:launch_config, 'redis', :stack_security_group => ref!(:sensu_internal_security_group))
-
-  parameters.redis_nodes do
-    type 'Number'
-    description 'Number of Redis nodes for ASG.'
-    default '1'
-  end
-
-  resources.redis_autoscale do
-    type 'AWS::AutoScaling::AutoScalingGroup'
+  resources(:uchiwa_public_security_group) do
+    type 'AWS::EC2::SecurityGroup'
     properties do
-      availability_zones({'Fn::GetAZs' => ''})
-      launch_configuration_name ref!(:redis_launch_config)
-      min_size ref!(:redis_nodes)
-      max_size ref!(:redis_nodes)
+      group_description 'Uchiwa public ports'
+      security_group_ingress _array(
+        -> {
+          ip_protocol "tcp"
+          from_port 3000
+          to_port 3000
+          cidr_ip "0.0.0.0/0"
+        }
+      )
     end
   end
+
+  # Launch configs
+  dynamic!(:launch_config, 'rabbitmq',
+           :security_groups => _array(
+             ref!(:sensu_internal_security_group),
+             ref!(:rabbitmq_public_security_group)))
+
+  dynamic!(:launch_config, 'redis',
+           :security_groups => ref!(:sensu_internal_security_group),
+           :instance_type => 'm3.medium')
 
   dynamic!(:launch_config, 'sensu',
-    :stack_security_group => ref!(:sensu_internal_security_group),
-    :depends_on => _array('RabbitmqAutoscale')
-  )
+           :security_groups => ref!(:sensu_internal_security_group))
 
-  parameters.sensu_nodes do
-    type 'Number'
-    description 'Number of Sensu nodes for ASG.'
-    default '2'
-  end
+  dynamic!(:launch_config, 'uchiwa',
+           :security_groups => _array(
+             ref!(:sensu_internal_security_group),
+             ref!(:uchiwa_public_security_group)),
+           :instance_type => 't2.medium')
 
-  resources.sensu_autoscale do
-    type 'AWS::AutoScaling::AutoScalingGroup'
-    properties do
-      availability_zones({'Fn::GetAZs' => ''})
-      launch_configuration_name ref!(:sensu_launch_config)
-      min_size ref!(:sensu_nodes)
-      max_size ref!(:sensu_nodes)
-    end
-  end
+  # Auto-scaling groups
+  dynamic!(:auto_scaling_group, 'rabbitmq')
+
+  dynamic!(:auto_scaling_group, 'redis',
+           :depends_on => :rabbitmq_launch_wait_condition)
+
+  dynamic!(:auto_scaling_group, 'sensu',
+           :depends_on => :redis_launch_wait_condition)
+
+  dynamic!(:auto_scaling_group, 'uchiwa',
+           :depends_on => :sensu_launch_wait_condition)
 end
