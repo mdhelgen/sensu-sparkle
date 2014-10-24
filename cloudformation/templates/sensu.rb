@@ -37,7 +37,8 @@ SparkleFormation.new(:sensu).load(:base).overrides do
            :run_list => _array('role[redis]'))
 
   dynamic!(:launch_config, 'sensu',
-           :security_groups => ref!(:sensu_internal_security_group))
+           :security_groups => ref!(:sensu_internal_security_group),
+           :run_list => _array('role[sensu]'))
 
   dynamic!(:launch_config, 'uchiwa',
            :security_groups => ref!(:sensu_internal_security_group),

@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: hw-sensu
-# Recipe:: rabbitmq
+# Recipe:: _discover_rabbitmq
 #
 # Copyright 2014, Heavy Water Operations, LLC
 #
@@ -24,9 +24,18 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'hw-sensu::_discover_rabbitmq'
+rabbitmq_nodes = search(:node, "chef_environment:#{node.chef_environment} AND recipes:hw-sensu\\:\\:rabbitmq")
 
-rabbitmq_nodes = node.run_state['hw-sensu']['rabbitmq_nodes']
-node.override['rabbitmq']['cluster_disk_nodes'] = rabbitmq_nodes.map { |n| 'rabbit@' + n['hostname'] }
+expanded_recipes = node.run_list.expand(node.chef_environment).recipes
 
-include_recipe 'sensu::rabbitmq'
+if expanded_recipes.include?('hw-sensu::rabbitmq')
+  rabbitmq_nodes << node
+  rabbitmq_nodes.uniq! { |n| n.name }
+end
+
+rabbitmq_nodes.sort!
+
+node.run_state['hw-sensu'] ||= Mash.new
+node.run_state['hw-sensu']['rabbitmq_nodes'] = rabbitmq_nodes
+
+node.override['sensu']['rabbitmq']['host'] = rabbitmq_nodes.first['cloud']['public_ipv4']

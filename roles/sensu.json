@@ -1,0 +1,8 @@
+{
+    "name": "sensu",
+    "description": "Sensu server and API node",
+    "run_list": [
+        "recipe[hw-sensu::server]",
+        "recipe[hw-sensu::api]"
+    ]
+}

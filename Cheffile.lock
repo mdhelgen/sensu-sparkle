@@ -15,7 +15,7 @@ SITE
     redisio (2.2.4)
       build-essential (>= 0.0.0)
       ulimit (>= 0.1.2)
-    sensu (2.1.0)
+    sensu (2.2.0)
       apt (>= 0.0.0)
       rabbitmq (>= 2.0.0)
       redisio (>= 1.7.0)

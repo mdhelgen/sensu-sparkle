@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: hw-sensu
-# Recipe:: default
+# Recipe:: client
 #
 # Copyright 2014, Heavy Water Operations, LLC
 #
@@ -23,3 +23,7 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+
+include_recipe 'hw-sensu::_base'
+
+include_recipe 'sensu::client_service'

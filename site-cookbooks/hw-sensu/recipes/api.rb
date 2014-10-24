@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: hw-sensu
-# Recipe:: rabbitmq
+# Recipe:: api
 #
 # Copyright 2014, Heavy Water Operations, LLC
 #
@@ -24,9 +24,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'hw-sensu::_discover_rabbitmq'
+include_recipe 'hw-sensu::_base'
+include_recipe 'hw-sensu::_discover_redis'
 
-rabbitmq_nodes = node.run_state['hw-sensu']['rabbitmq_nodes']
-node.override['rabbitmq']['cluster_disk_nodes'] = rabbitmq_nodes.map { |n| 'rabbit@' + n['hostname'] }
-
-include_recipe 'sensu::rabbitmq'
+include_recipe 'sensu::api_service'

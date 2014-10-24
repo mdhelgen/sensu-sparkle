@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: hw-sensu
-# Recipe:: default
+# Recipe:: server
 #
 # Copyright 2014, Heavy Water Operations, LLC
 #
@@ -23,3 +23,18 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+
+include_recipe 'hw-sensu::_base'
+include_recipe 'hw-sensu::_discover_redis'
+
+sensu_handler 'default' do
+  type 'set'
+  handlers node['hw-sensu']['handlers']['default']
+end
+
+sensu_handler 'metrics' do
+  type 'set'
+  handlers node['hw-sensu']['handlers']['metrics']
+end
+
+include_recipe 'sensu::server_service'
