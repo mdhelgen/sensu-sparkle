@@ -1,0 +1,9 @@
+{
+  "id": "enterprise",
+  "repository": {
+    "encrypted_data": "7BT7LNYyYA3/o8LXMk40xllSBN+ywiK4AI0T+iE3Tpvo+d9M/6mPGkYJWPkV\neVdsOW/o2SgUmpNZDvlSRDaxAvbAIOJ5Snivniz8RlxkQIfNMSaJ4D3x0R/Y\ntHAhDYxL\n",
+    "iv": "mg1AvPHAXcFiobbza1MMpA==\n",
+    "version": 1,
+    "cipher": "aes-256-cbc"
+  }
+}

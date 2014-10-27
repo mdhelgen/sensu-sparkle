@@ -88,6 +88,13 @@ SparkleFormation.dynamic(:launch_config) do |_name, _config = {}|
           group 'root'
           authentication 'S3AccessCreds'
         end
+        files('/etc/chef/encrypted_data_bag_secret') do
+          source 'https://sensu-sparkle.s3-us-west-2.amazonaws.com/encrypted_data_bag_secret'
+          mode '000400'
+          owner 'root'
+          group 'root'
+          authentication 'S3AccessCreds'
+        end
         files('/etc/chef/first_run.json') do
           content do
             run_list (_config[:run_list] || [])
@@ -108,7 +115,8 @@ SparkleFormation.dynamic(:launch_config) do |_name, _config = {}|
             "log_location '/var/log/chef/client.log'\n",
             "chef_server_url 'https://api.opscode.com/organizations/sensu-sparkle'\n",
             "validation_key '/etc/chef/chef-validator.pem'\n",
-            "validation_client_name 'sensu-sparkle-validator'\n"
+            "validation_client_name 'sensu-sparkle-validator'\n",
+            "encrypted_data_bag_secret '/etc/chef/encrypted_data_bag_secret'\n"
           )
           mode '000644'
           owner 'root'

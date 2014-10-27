@@ -1,0 +1,7 @@
+{
+    "name": "sensu_enterprise",
+    "description": "Sensu Enterprise node",
+    "run_list": [
+        "recipe[hw-sensu::enterprise]"
+    ]
+}

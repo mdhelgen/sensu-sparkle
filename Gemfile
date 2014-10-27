@@ -13,3 +13,4 @@ gem 'knife-cloudformation',
   :git => 'git@github.com:heavywater/knife-cloudformation.git',
   :ref => 'feature/fog-model'
 gem 'knife-ec2'
+gem 'encrypt_data_bag'

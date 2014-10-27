@@ -30,7 +30,7 @@ api_node = node.run_state['hw-sensu']['api_nodes'].first
 
 node.override['uchiwa']['api'] = [{
   'name' => 'Sensu',
-  'host' => api_node['cloud']['public_ipv4'],
+  'host' => api_node['cloud']['local_ipv4'],
   'port' => api_node['sensu']['api']['port'],
   'user' => api_node['sensu']['api']['user'],
   'password' => api_node['sensu']['api']['password']

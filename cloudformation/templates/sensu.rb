@@ -40,6 +40,10 @@ SparkleFormation.new(:sensu).load(:base).overrides do
            :security_groups => ref!(:sensu_internal_security_group),
            :run_list => _array('role[sensu]', 'role[monitor]'))
 
+  dynamic!(:launch_config, 'sensu_enterprise',
+           :security_groups => ref!(:sensu_internal_security_group),
+           :run_list => _array('role[sensu_enterprise]', 'role[monitor]'))
+
   dynamic!(:launch_config, 'uchiwa',
            :security_groups => ref!(:sensu_internal_security_group),
            :public_ports => 3000,
@@ -55,6 +59,9 @@ SparkleFormation.new(:sensu).load(:base).overrides do
            :depends_on => :rabbitmq_primary_launch_wait_condition)
 
   dynamic!(:auto_scaling_group, 'sensu',
+           :depends_on => :redis_launch_wait_condition)
+
+  dynamic!(:auto_scaling_group, 'sensu_enterprise',
            :depends_on => :redis_launch_wait_condition)
 
   dynamic!(:auto_scaling_group, 'uchiwa',

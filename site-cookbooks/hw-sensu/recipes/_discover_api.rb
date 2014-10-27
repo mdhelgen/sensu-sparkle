@@ -24,7 +24,10 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-api_nodes = search(:node, "chef_environment:#{node.chef_environment} AND recipes:hw-sensu\\:\\:api")
+search_string = "chef_environment:#{node.chef_environment} AND " \
+  '(recipes:hw-sensu\:\:api OR recipes:hw-sensu\:\:enterprise)'
+
+api_nodes = search(:node, search_string)
 
 expanded_recipes = node.run_list.expand(node.chef_environment).recipes
 
