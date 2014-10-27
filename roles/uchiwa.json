@@ -1,0 +1,7 @@
+{
+    "name": "uchiwa",
+    "description": "Uchiwa, a Sensu dashboard",
+    "run_list": [
+        "recipe[hw-sensu::uchiwa]"
+    ]
+}

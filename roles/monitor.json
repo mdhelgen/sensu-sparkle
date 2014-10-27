@@ -1,0 +1,7 @@
+{
+    "name": "monitor",
+    "description": "Monitoring agents",
+    "run_list": [
+        "recipe[hw-sensu::client]"
+    ]
+}

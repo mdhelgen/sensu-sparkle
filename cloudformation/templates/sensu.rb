@@ -28,22 +28,23 @@ SparkleFormation.new(:sensu).load(:base).overrides do
     dynamic!(:launch_config, "rabbitmq_#{tier}",
              :security_groups => ref!(:sensu_internal_security_group),
              :public_ports => 5671,
-             :run_list => _array('role[rabbitmq]'))
+             :run_list => _array('role[rabbitmq]', 'role[monitor]'))
   end
 
   dynamic!(:launch_config, 'redis',
            :security_groups => ref!(:sensu_internal_security_group),
            :instance_type => 'm3.medium',
-           :run_list => _array('role[redis]'))
+           :run_list => _array('role[redis]', 'role[monitor]'))
 
   dynamic!(:launch_config, 'sensu',
            :security_groups => ref!(:sensu_internal_security_group),
-           :run_list => _array('role[sensu]'))
+           :run_list => _array('role[sensu]', 'role[monitor]'))
 
   dynamic!(:launch_config, 'uchiwa',
            :security_groups => ref!(:sensu_internal_security_group),
            :public_ports => 3000,
-           :instance_type => 'm1.small')
+           :instance_type => 'm1.small',
+           :run_list => _array('role[uchiwa]', 'role[monitor]'))
 
   # Auto-scaling groups
   dynamic!(:auto_scaling_group, 'rabbitmq_secondary')

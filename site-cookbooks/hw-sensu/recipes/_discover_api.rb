@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: hw-sensu
-# Recipe:: client
+# Recipe:: _discover_api
 #
 # Copyright 2014, Heavy Water Operations, LLC
 #
@@ -24,15 +24,16 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'hw-sensu::_base'
+api_nodes = search(:node, "chef_environment:#{node.chef_environment} AND recipes:hw-sensu\\:\\:api")
 
-client_attributes = node['hw-sensu']['client_attributes'].to_hash
-client_attributes.merge!('environment' => node.chef_environment, 'tags' => node['tags'])
+expanded_recipes = node.run_list.expand(node.chef_environment).recipes
 
-sensu_client node.name do
-  address node['cloud']['public_ipv4']
-  subscriptions node['roles'] + ['all']
-  additional client_attributes
+if expanded_recipes.include?('hw-sensu::api')
+  api_nodes << node
+  api_nodes.uniq! { |n| n.name }
 end
 
-include_recipe 'sensu::client_service'
+api_nodes.sort!
+
+node.run_state['hw-sensu'] ||= Mash.new
+node.run_state['hw-sensu']['api_nodes'] = api_nodes

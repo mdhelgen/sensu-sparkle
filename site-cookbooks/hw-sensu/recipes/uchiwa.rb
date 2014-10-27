@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: hw-sensu
-# Recipe:: default
+# Recipe:: uchiwa
 #
 # Copyright 2014, Heavy Water Operations, LLC
 #
@@ -23,3 +23,17 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+
+include_recipe 'hw-sensu::_discover_api'
+
+api_node = node.run_state['hw-sensu']['api_nodes'].first
+
+node.override['uchiwa']['api'] = [{
+  'name' => 'Sensu',
+  'host' => api_node['cloud']['public_ipv4'],
+  'port' => api_node['sensu']['api']['port'],
+  'user' => api_node['sensu']['api']['user'],
+  'password' => api_node['sensu']['api']['password']
+}]
+
+include_recipe 'uchiwa'
