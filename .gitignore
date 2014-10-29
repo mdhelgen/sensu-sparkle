@@ -3,3 +3,5 @@ Gemfile.lock
 .chef/knife.local.rb
 cookbooks/
 data_bags/**/*.rb
+.kitchen/
+.librarian/

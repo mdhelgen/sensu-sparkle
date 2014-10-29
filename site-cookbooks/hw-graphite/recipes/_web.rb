@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: hw-sensu
-# Recipe:: _handlers
+# Cookbook Name:: hw-graphite
+# Recipe:: _web
 #
-# Copyright 2014, Heavy Water Operations, LLC
+# Copyright 2014, Heavy Water Operations, LLC.
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -24,20 +24,36 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'hw-sensu::_discover_graphite'
+include_recipe 'graphite::web'
 
-graphite_node = node.run_state['hw-sensu']['graphite_nodes'].first
+base_dir = node['graphite']['base_dir']
+storage_dir = node['graphite']['storage_dir']
 
-sensu_snippet 'graphite' do
-  content 'host' => graphite_node['cloud']['local_ipv4']
+graphite_web_config "#{base_dir}/webapp/graphite/local_settings.py" do
+  config({
+    'secret_key' => 'super_secret',
+    'time_zone' => 'America/Chicago',
+    'conf_dir' => File.join(base_dir,'conf'),
+    'storage_dir' => storage_dir,
+    'databases' => {
+      'default' => {
+        # keys need to be upcase here
+        'NAME' => File.join(storage_dir, 'graphite.db'),
+        'ENGINE' => 'django.db.backends.sqlite3',
+        'USER' => nil,
+        'PASSWORD' => nil,
+        'HOST' => nil,
+        'PORT' => nil
+      }
+    }
+  })
 end
 
-sensu_handler 'default' do
-  type 'set'
-  handlers node['hw-sensu']['handlers']['default']
+execute 'python manage.py syncdb --noinput' do
+  user node['graphite']['user']
+  group node['graphite']['group']
+  cwd File.join(base_dir, 'webapp', 'graphite')
+  creates File.join(storage_dir, 'graphite.db')
 end
 
-sensu_handler 'metrics' do
-  type 'set'
-  handlers node['hw-sensu']['handlers']['metrics']
-end
+include_recipe 'graphite::uwsgi'

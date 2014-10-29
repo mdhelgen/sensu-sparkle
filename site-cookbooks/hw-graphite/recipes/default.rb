@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: hw-sensu
-# Recipe:: _handlers
+# Cookbook Name:: hw-graphite
+# Recipe:: default
 #
-# Copyright 2014, Heavy Water Operations, LLC
+# Copyright 2014, Heavy Water Operations, LLC.
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -24,20 +24,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'hw-sensu::_discover_graphite'
+include_recipe 'apt'
 
-graphite_node = node.run_state['hw-sensu']['graphite_nodes'].first
-
-sensu_snippet 'graphite' do
-  content 'host' => graphite_node['cloud']['local_ipv4']
-end
-
-sensu_handler 'default' do
-  type 'set'
-  handlers node['hw-sensu']['handlers']['default']
-end
-
-sensu_handler 'metrics' do
-  type 'set'
-  handlers node['hw-sensu']['handlers']['metrics']
-end
+include_recipe 'hw-graphite::_carbon'
+include_recipe 'hw-graphite::_web'

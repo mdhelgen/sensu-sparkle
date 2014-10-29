@@ -1,0 +1,7 @@
+{
+    "name": "graphite",
+    "description": "Graphite carbon and web node",
+    "run_list": [
+        "recipe[hw-graphite]"
+    ]
+}

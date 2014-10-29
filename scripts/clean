@@ -1,0 +1,4 @@
+#!/bin/bash
+
+bundle exec knife client bulk delete ip-* -y
+bundle exec knife node bulk delete ip-* -y

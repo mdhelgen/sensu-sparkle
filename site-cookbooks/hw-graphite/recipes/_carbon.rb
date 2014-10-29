@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: hw-sensu
-# Recipe:: _handlers
+# Cookbook Name:: hw-graphite
+# Recipe:: _carbon
 #
-# Copyright 2014, Heavy Water Operations, LLC
+# Copyright 2014, Heavy Water Operations, LLC.
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -24,20 +24,27 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'hw-sensu::_discover_graphite'
+include_recipe 'graphite::carbon'
 
-graphite_node = node.run_state['hw-sensu']['graphite_nodes'].first
+graphite = data_bag('graphite')
 
-sensu_snippet 'graphite' do
-  content 'host' => graphite_node['cloud']['local_ipv4']
+if graphite.include?('storage_schemas')
+  storage_schemas = data_bag_item('graphite', 'storage_schemas')
+  storage_schemas['configs'].each do |schema|
+    graphite_storage_schema schema['id'] do
+      config schema['config']
+    end
+  end
 end
 
-sensu_handler 'default' do
-  type 'set'
-  handlers node['hw-sensu']['handlers']['default']
-end
+if graphite.include?('carbon_caches')
+  carbon_caches = data_bag_item('graphite', 'carbon_caches')
+  carbon_caches['configs'].each do |cache|
+    graphite_carbon_cache cache['id'] do
+      config cache['config']
+    end
+  end
 
-sensu_handler 'metrics' do
-  type 'set'
-  handlers node['hw-sensu']['handlers']['metrics']
+  include_recipe 'runit'
+  graphite_service 'cache'
 end

@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: hw-sensu
-# Recipe:: _handlers
+# Recipe:: _discover_graphite
 #
 # Copyright 2014, Heavy Water Operations, LLC
 #
@@ -24,20 +24,16 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'hw-sensu::_discover_graphite'
+graphite_nodes = search(:node, "chef_environment:#{node.chef_environment} AND recipes:hw-graphite")
 
-graphite_node = node.run_state['hw-sensu']['graphite_nodes'].first
+expanded_recipes = node.run_list.expand(node.chef_environment).recipes
 
-sensu_snippet 'graphite' do
-  content 'host' => graphite_node['cloud']['local_ipv4']
+if expanded_recipes.include?('hw-graphite')
+  graphite_nodes << node
+  graphite_nodes.uniq! { |n| n.name }
 end
 
-sensu_handler 'default' do
-  type 'set'
-  handlers node['hw-sensu']['handlers']['default']
-end
+graphite_nodes.sort!
 
-sensu_handler 'metrics' do
-  type 'set'
-  handlers node['hw-sensu']['handlers']['metrics']
-end
+node.run_state['hw-sensu'] ||= Mash.new
+node.run_state['hw-sensu']['graphite_nodes'] = graphite_nodes

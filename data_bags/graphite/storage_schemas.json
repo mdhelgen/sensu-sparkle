@@ -1,0 +1,19 @@
+{
+    "id": "storage_schemas",
+    "configs": [
+        {
+            "id": "carbon",
+            "config": {
+                "pattern": "^carbon.",
+                "retentions": "60:90d"
+            }
+        },
+        {
+            "id": "default_1min_for_1day",
+            "config": {
+                "pattern": ".*",
+                "retentions": "60s:1d"
+            }
+        }
+    ]
+}

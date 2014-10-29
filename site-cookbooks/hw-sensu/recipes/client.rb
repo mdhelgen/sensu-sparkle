@@ -35,4 +35,6 @@ sensu_client node.name do
   additional client_attributes
 end
 
+include_recipe 'hw-sensu::_extensions'
+
 include_recipe 'sensu::client_service'

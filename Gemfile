@@ -14,3 +14,6 @@ gem 'knife-cloudformation',
   :ref => 'feature/fog-model'
 gem 'knife-ec2'
 gem 'encrypt_data_bag'
+gem 'test-kitchen'
+gem 'kitchen-vagrant'
+gem 'kitchen-docker'

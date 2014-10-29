@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: hw-sensu
-# Recipe:: _handlers
+# Recipe:: _extensions
 #
 # Copyright 2014, Heavy Water Operations, LLC
 #
@@ -24,20 +24,8 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'hw-sensu::_discover_graphite'
-
-graphite_node = node.run_state['hw-sensu']['graphite_nodes'].first
-
-sensu_snippet 'graphite' do
-  content 'host' => graphite_node['cloud']['local_ipv4']
-end
-
-sensu_handler 'default' do
-  type 'set'
-  handlers node['hw-sensu']['handlers']['default']
-end
-
-sensu_handler 'metrics' do
-  type 'set'
-  handlers node['hw-sensu']['handlers']['metrics']
+cookbook_file '/etc/sensu/extensions/system_profile.rb' do
+  source 'extensions/system_profile.rb'
+  mode 0755
+  notifies :create, 'ruby_block[sensu_service_trigger]', :immediately
 end
