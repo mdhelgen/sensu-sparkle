@@ -4,3 +4,4 @@ Gemfile.lock
 cookbooks/
 data_bags/**/*.rb
 .kitchen/
+.librarian/
