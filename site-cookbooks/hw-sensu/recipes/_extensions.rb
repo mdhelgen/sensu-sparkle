@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: hw-sensu
-# Recipe:: client
+# Recipe:: _extensions
 #
 # Copyright 2014, Heavy Water Operations, LLC
 #
@@ -24,17 +24,8 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'hw-sensu::_base'
-
-client_attributes = node['hw-sensu']['client_attributes'].to_hash
-client_attributes.merge!('environment' => node.chef_environment, 'tags' => node['tags'])
-
-sensu_client node.name do
-  address node['cloud']['public_ipv4']
-  subscriptions node['roles'] + ['all']
-  additional client_attributes
+cookbook_file '/etc/sensu/extensions/system_profile.rb' do
+  source 'extensions/system_profile.rb'
+  mode 0755
+  notifies :create, 'ruby_block[sensu_service_trigger]', :immediately
 end
-
-include_recipe 'hw-sensu::_extensions'
-
-include_recipe 'sensu::client_service'
