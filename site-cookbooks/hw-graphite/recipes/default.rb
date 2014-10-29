@@ -24,5 +24,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
+include_recipe 'apt'
+
 include_recipe 'hw-graphite::_carbon'
 include_recipe 'hw-graphite::_web'

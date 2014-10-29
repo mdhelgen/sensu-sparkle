@@ -45,5 +45,6 @@ if graphite.include?('carbon_caches')
     end
   end
 
+  include_recipe 'runit'
   graphite_service 'cache'
 end
