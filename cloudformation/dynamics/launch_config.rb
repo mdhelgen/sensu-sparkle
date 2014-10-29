@@ -130,7 +130,11 @@ SparkleFormation.dynamic(:launch_config) do |_name, _config = {}|
           command 'mkdir -p /var/log/chef'
           test 'test ! -e /var/log/chef'
         end
-        commands('03_chef_first_run') do
+        commands('03_chef_node_name') do
+          command 'echo "node_name \'`curl -s http://169.254.169.254/latest/meta-data/instance-id`\'" >> /etc/chef/client.rb'
+          test '! grep node_name /etc/chef/client.rb'
+        end
+        commands('04_chef_first_run') do
           command '/usr/bin/chef-client -j /etc/chef/first_run.json'
           test 'test -e /etc/chef/chef-validator.pem'
         end
