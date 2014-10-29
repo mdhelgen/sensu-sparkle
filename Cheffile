@@ -4,3 +4,4 @@
 site 'https://supermarket.getchef.com/api/v1'
 
 cookbook 'hw-sensu', :path => 'site-cookbooks/hw-sensu'
+cookbook 'hw-graphite', :path => 'site-cookbooks/hw-graphite'

@@ -15,9 +15,22 @@ SITE
       yum (~> 3.0)
       yum-epel (>= 0.0.0)
       yum-erlang_solutions (>= 0.0.0)
+    graphite (1.0.1)
+      build-essential (>= 0.0.0)
+      memcached (>= 0.0.0)
+      python (>= 0.0.0)
+      runit (~> 1.0)
+      yum-epel (>= 0.0.0)
+    memcached (1.7.2)
+      runit (~> 1.0)
+      yum (~> 3.0)
+      yum-epel (>= 0.0.0)
     nodejs (2.1.0)
       apt (>= 0.0.0)
       ark (>= 0.0.0)
+      build-essential (>= 0.0.0)
+      yum-epel (>= 0.0.0)
+    python (1.4.6)
       build-essential (>= 0.0.0)
       yum-epel (>= 0.0.0)
     rabbitmq (3.3.0)
@@ -25,6 +38,10 @@ SITE
     redisio (2.2.4)
       build-essential (>= 0.0.0)
       ulimit (>= 0.1.2)
+    runit (1.5.10)
+      build-essential (>= 0.0.0)
+      yum (~> 3.0)
+      yum-epel (>= 0.0.0)
     sensu (2.2.0)
       apt (>= 0.0.0)
       rabbitmq (>= 2.0.0)
@@ -45,6 +62,12 @@ SITE
       yum (~> 3.0)
 
 PATH
+  remote: site-cookbooks/hw-graphite
+  specs:
+    hw-graphite (0.1.0)
+      graphite (= 1.0.1)
+
+PATH
   remote: site-cookbooks/hw-sensu
   specs:
     hw-sensu (0.1.0)
@@ -52,5 +75,6 @@ PATH
       uchiwa (>= 0.0.0)
 
 DEPENDENCIES
+  hw-graphite (>= 0)
   hw-sensu (>= 0)
 
