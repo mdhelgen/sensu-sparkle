@@ -55,7 +55,7 @@ SITE
     ulimit (0.3.2)
     windows (1.34.6)
       chef_handler (>= 0.0.0)
-    yum (3.4.0)
+    yum (3.4.1)
     yum-epel (0.5.2)
       yum (~> 3.0)
     yum-erlang_solutions (0.2.0)

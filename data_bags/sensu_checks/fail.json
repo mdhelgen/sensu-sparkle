@@ -1,0 +1,8 @@
+{
+  "id": "fail",
+  "command": "echo -n fail && exit 2",
+  "subscribers": [
+    "all"
+  ],
+  "publish": false
+}

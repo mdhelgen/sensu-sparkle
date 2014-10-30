@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: hw-sensu
-# Recipe:: server
+# Recipe:: _checks
 #
 # Copyright 2014, Heavy Water Operations, LLC
 #
@@ -24,9 +24,11 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'hw-sensu::_base'
-include_recipe 'hw-sensu::_discover_redis'
-include_recipe 'hw-sensu::_handlers'
-include_recipe 'hw-sensu::_checks'
-
-include_recipe 'sensu::server_service'
+data_bag('sensu_checks').each do |data_bag_item|
+  check = data_bag_item('sensu_checks', data_bag_item)
+  sensu_check check['id'] do
+    check.each do |key, value|
+      send(key.to_sym, value) if respond_to?(key.to_sym)
+    end
+  end
+end
