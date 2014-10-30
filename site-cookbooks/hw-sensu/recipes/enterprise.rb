@@ -27,6 +27,7 @@
 include_recipe 'hw-sensu::_base'
 include_recipe 'hw-sensu::_discover_redis'
 include_recipe 'hw-sensu::_handlers'
+include_recipe 'hw-sensu::_checks'
 
 platform_family = node.platform_family
 platform_version = node.platform_version.to_i
@@ -68,5 +69,6 @@ package 'sensu-enterprise'
 service 'sensu-enterprise' do
   subscribes :restart, resources("package[sensu-enterprise]"), :immediately
   subscribes :reload, resources("ruby_block[sensu_service_trigger]"), :delayed
+  supports :status => true, :start => true, :stop => true, :restart => true, :reload => true
   action [:enable, :start]
 end

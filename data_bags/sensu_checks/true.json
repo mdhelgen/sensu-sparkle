@@ -1,0 +1,8 @@
+{
+  "id": "true",
+  "command": "true",
+  "subscribers": [
+    "all"
+  ],
+  "interval": 10
+}
