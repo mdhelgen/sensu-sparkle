@@ -63,7 +63,9 @@ else
   repo.gpgcheck(false) if repo.respond_to?(:gpgcheck)
 end
 
-package 'sensu-enterprise'
+package 'sensu-enterprise' do
+  action :upgrade
+end
 
 service 'sensu-enterprise' do
   subscribes :restart, resources("package[sensu-enterprise]"), :immediately
