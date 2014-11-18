@@ -1,1 +1,1 @@
-override['uchiwa']['version'] = '0.2.6-1'
+override['uchiwa']['version'] = '0.3.2-1'
