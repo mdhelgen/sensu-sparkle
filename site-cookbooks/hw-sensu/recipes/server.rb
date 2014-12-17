@@ -24,8 +24,8 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'hw-sensu::_base'
 include_recipe 'hw-sensu::_discover_redis'
+include_recipe 'hw-sensu::_base'
 include_recipe 'hw-sensu::_handlers'
 include_recipe 'hw-sensu::_checks'
 
