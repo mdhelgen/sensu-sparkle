@@ -3,8 +3,5 @@
 
 site 'https://supermarket.getchef.com/api/v1'
 
-cookbook 'sensu',
-  :git => 'https://github.com/sensu/sensu-chef.git'
-
 cookbook 'hw-sensu', :path => 'site-cookbooks/hw-sensu'
 cookbook 'hw-graphite', :path => 'site-cookbooks/hw-graphite'
